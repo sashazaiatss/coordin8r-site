@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Features — Coordin8r</title>
+<meta name="description" content="Capacity Command Center, AI project planning, team profiles, and timeline view. Everything a small firm needs to stay ahead of overload.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .feature-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    padding: 80px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .feature-detail:last-child { border-bottom: none; }
+  .feature-detail.reverse { direction: rtl; }
+  .feature-detail.reverse > * { direction: ltr; }
+
+  .feature-detail-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  .feature-detail h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  .feature-detail p {
+    font-size: 16px;
+    color: var(--slate);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .feature-points { list-style: none; margin-top: 8px; }
+  .feature-points li {
+    font-size: 14px;
+    color: var(--slate);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .feature-points li:last-child { border-bottom: none; }
+  .feature-points li::before { content: '→'; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+
+  .feature-visual {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    box-shadow: 0 8px 32px rgba(15,23,42,0.06);
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .visual-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Capacity viz */
+  .mini-row { display: flex; align-items: center; gap: 12px; }
+  .mini-name { font-size: 12px; color: var(--slate); width: 80px; flex-shrink: 0; }
+  .mini-track { flex: 1; height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .mini-fill  { height: 100%; border-radius: 100px; }
+  .mini-pct  { font-size: 11px; font-weight: 600; width: 32px; text-align: right; }
+
+  /* AI prompt viz */
+  .ai-bubble {
+    background: var(--blue-dim);
+    border-radius: 12px 12px 12px 4px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--navy);
+    max-width: 85%;
+  }
+
+  .ai-response {
+    background: var(--navy);
+    border-radius: 12px 12px 4px 12px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    max-width: 90%;
+    align-self: flex-end;
+    line-height: 1.6;
+  }
+
+  .ai-chat { display: flex; flex-direction: column; gap: 12px; }
+
+  /* Timeline viz */
+  .timeline-bar-row { margin-bottom: 12px; }
+  .timeline-bar-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+  .timeline-bar {
+    height: 24px;
+    border-radius: 6px;
+    background: var(--blue);
+    opacity: 0.85;
+    position: relative;
+  }
+
+  /* Profile viz */
+  .profile-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .profile-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--blue-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .profile-name { font-size: 15px; font-weight: 600; color: var(--navy); }
+  .profile-role { font-size: 12px; color: var(--muted); }
+  .profile-stat { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .profile-stat:last-child { border-bottom: none; }
+  .stat-label { color: var(--muted); }
+  .stat-value { font-weight: 600; color: var(--navy); }
+  .stat-value.warn { color: var(--amber); }
+  .stat-value.ok { color: var(--blue); }
+
+  @media (max-width: 900px) {
+    .feature-detail { grid-template-columns: 1fr; gap: 40px; }
+    .feature-detail.reverse { direction: ltr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">
+    <img src="../assets/logos/mark/coordn8r-mark.svg" alt="Coordin8r" class="logo-svg">
+  </a>
+  <ul class="nav-links">
+    <li><a href="features.html" class="active">Features</a></li>
+    <li><a href="who.html">Who it's for</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="joinwaitlist.html" class="btn-nav">Join waitlist</a>
+  </div>
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-hero">
+  <div class="section-label">Features</div>
+  <h1 class="section-headline">Everything you need.<br>Nothing you don't.</h1>
+  <p class="section-sub">Coordin8r is purpose-built for small project firms. No bloat, no enterprise cruft — just a clear view of who can take on what.</p>
+</div>
+
+<section>
+  <div class="section-inner">
+
+    <!-- Feature 1: Capacity Command Center -->
+    <div class="feature-detail fade-in">
+      <div>
+        <div class="feature-detail-label">Core view</div>
+        <h2>Capacity Command Center</h2>
+        <p>Your team's availability for the next four weeks, in one view. Overload warnings surface before they become delivery problems.</p>
+        <ul class="feature-points">
+          <li>Color-coded allocation: healthy, at-risk, overloaded</li>
+          <li>Per-person weekly breakdown</li>
+          <li>Alerts fire before deadlines, not after</li>
+          <li>Filters by role, project, or time window</li>
+        </ul>
+      </div>
+      <div class="feature-visual fade-in">
+        <div class="visual-label">Team capacity · Week of Apr 7</div>
+        <div class="mini-row"><span class="mini-name">Jordan K.</span><div class="mini-track"><div class="mini-fill" style="width:72%;background:var(--blue)"></div></div><span class="mini-pct" style="color:var(--blue)">72%</span></div>
+        <div class="mini-row"><span class="mini-name">Mia Chen</span><div class="mini-track"><div class="mini-fill" style="width:100%;background:var(--red)"></div></div><span class="mini-pct" style="color:var(--red)">118%</span></div>
+        <div class="mini-row"><span class="mini-name">Dev T.</span><div class="mini-track"><div class="mini-fill" style="width:88%;background:var(--amber)"></div></div><span class="mini-pct" style="color:var(--amber)">88%</span></div>
+        <div class="mini-row"><span class="mini-name">Sam R.</span><div class="mini-track"><div class="mini-fill" style="width:55%;background:var(--blue)"></div></div><span class="mini-pct" style="color:var(--blue)">55%</span></div>
+        <div class="mini-row"><span class="mini-name">Priya N.</span><div class="mini-track"><div class="mini-fill" style="width:40%;background:var(--blue)"></div></div><span class="mini-pct" style="color:var(--blue)">40%</span></div>
+      </div>
+    </div>
+
+    <!-- Feature 2: AI Planning -->
+    <div class="feature-detail reverse fade-in">
+      <div>
+        <div class="feature-detail-label">AI-assisted</div>
+        <h2>Project Planning Without the Spreadsheet</h2>
+        <p>Describe a new project in plain language. Coordin8r drafts a resource plan — roles, hours, timeline — and shows its capacity impact before you commit.</p>
+        <ul class="feature-points">
+          <li>Natural language project input</li>
+          <li>AI generates role assignments and hour estimates</li>
+          <li>Live capacity impact preview</li>
+          <li>Edit any detail, accept when ready</li>
+        </ul>
+      </div>
+      <div class="feature-visual fade-in">
+        <div class="visual-label">New project — AI planning</div>
+        <div class="ai-chat">
+          <div class="ai-bubble">Brand refresh for a fintech client. 6 weeks. Need a designer and a PM. Presenting to their board mid-May.</div>
+          <div class="ai-response">Draft plan ready: 6 weeks · Designer 20h/wk · PM 8h/wk · Starts Apr 14. <br><br>⚠️ Mia Chen (Designer) hits 95% capacity in week 3. Consider Dev T. as backup or shift start by 1 week.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3: Team Profiles -->
+    <div class="feature-detail fade-in">
+      <div>
+        <div class="feature-detail-label">Team visibility</div>
+        <h2>Team Member Profiles</h2>
+        <p>A single page per person: their role, weekly availability, active projects, and upcoming weeks at a glance. No more asking around to find out who has capacity.</p>
+        <ul class="feature-points">
+          <li>Availability set per person</li>
+          <li>Active and upcoming project list</li>
+          <li>4-week capacity calendar view</li>
+          <li>Flag time off and unavailability</li>
+        </ul>
+      </div>
+      <div class="feature-visual fade-in">
+        <div class="profile-header">
+          <div class="profile-avatar">👩‍💻</div>
+          <div>
+            <div class="profile-name">Mia Chen</div>
+            <div class="profile-role">Senior Designer · Full-time</div>
+          </div>
+        </div>
+        <div class="profile-stat"><span class="stat-label">This week</span><span class="stat-value warn">88% allocated</span></div>
+        <div class="profile-stat"><span class="stat-label">Next week</span><span class="stat-value" style="color:var(--red)">118% allocated</span></div>
+        <div class="profile-stat"><span class="stat-label">Active projects</span><span class="stat-value">3</span></div>
+        <div class="profile-stat"><span class="stat-label">Time off</span><span class="stat-value">Apr 21–22</span></div>
+        <div class="profile-stat"><span class="stat-label">Available from</span><span class="stat-value ok">May 5</span></div>
+      </div>
+    </div>
+
+    <!-- Feature 4: Timeline -->
+    <div class="feature-detail reverse fade-in">
+      <div>
+        <div class="feature-detail-label">Project view</div>
+        <h2>Timeline View</h2>
+        <p>All active and upcoming projects on one Gantt-style view. See overlap, back-to-back deadlines, and open gaps — without opening a spreadsheet.</p>
+        <ul class="feature-points">
+          <li>All projects on one horizontal view</li>
+          <li>Drag to reschedule (coming soon)</li>
+          <li>Filter by team member or client</li>
+          <li>Spot delivery conflicts instantly</li>
+        </ul>
+      </div>
+      <div class="feature-visual fade-in">
+        <div class="visual-label">Timeline · April – May 2026</div>
+        <div style="margin-top:8px;">
+          <div class="timeline-bar-row">
+            <div class="timeline-bar-label">Vantage Rebrand</div>
+            <div class="timeline-bar" style="width:55%; margin-left:0%"></div>
+          </div>
+          <div class="timeline-bar-row">
+            <div class="timeline-bar-label">Q2 Campaign</div>
+            <div class="timeline-bar" style="width:40%; margin-left:20%; opacity:0.7;"></div>
+          </div>
+          <div class="timeline-bar-row">
+            <div class="timeline-bar-label">Platform MVP</div>
+            <div class="timeline-bar" style="width:65%; margin-left:30%; background:var(--slate); opacity:0.5;"></div>
+          </div>
+          <div class="timeline-bar-row">
+            <div class="timeline-bar-label">Holloway Refresh</div>
+            <div class="timeline-bar" style="width:30%; margin-left:55%; opacity:0.9;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--navy); text-align:center; padding:100px 48px;">
+  <div class="section-label" style="color:var(--blue-pale)">Get started</div>
+  <h2 class="section-headline" style="color:white; max-width:520px; margin:0 auto 20px;">See your team's capacity in minutes</h2>
+  <p class="section-sub" style="color:rgba(255,255,255,0.55); max-width:440px; margin:0 auto 40px;">No setup required. Connect your team and get a live view of the next four weeks.</p>
+  <a href="joinwaitlist.html" class="btn-primary" style="font-size:16px; padding:16px 32px;">Join waitlist</a>
+</section>
+
+<footer>
+  <a href="../index.html" class="footer-logo">
+    <img src="../assets/logos/mark/coordn8r-mark.svg" alt="Coordin8r" class="logo-svg">
+  </a>
+  <span class="footer-copy">© 2026 Coordin8r. All rights reserved.</span>
+  <ul class="footer-links">
+    <li><a href="privacy.html">Privacy</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+<script src="../js/nav.js"></script>
+</body>
+</html>
